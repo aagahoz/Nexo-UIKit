@@ -21,4 +21,7 @@ struct JobApplication {
     var platform: String
     var applicationDate: Date
     var status: ApplicationStatus
+    var contacts: [Contact]
+    var steps: [ApplicationStep]
+    var deadlines: [Deadline]
 }
