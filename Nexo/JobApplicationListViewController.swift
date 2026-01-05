@@ -10,6 +10,7 @@ import UIKit
 final class JobApplicationListViewController: UIViewController {
     
     private let tableView = UITableView()
+    private let repository = JobApplicationRepository.shared
     private var applications: [JobApplication] = []
     
     override func viewDidLoad() {
@@ -19,7 +20,8 @@ final class JobApplicationListViewController: UIViewController {
         title = "Başvurular"
         
         setupTableView()
-        loadDummyData()
+        repository.loadSampleDataIfNeeded()
+        reloadData()
     }
     
     private func setupTableView() {
@@ -37,11 +39,8 @@ final class JobApplicationListViewController: UIViewController {
         tableView.delegate = self
     }
     
-    private func loadDummyData() {
-        
-        let app = JobApplication(id: UUID(), companyName: "ABC Teknoloji", positionTitle: "iOS Developer", platform: "LinkedIn", applicationDate: Date(), status: .applied, contacts: [], steps: [], deadlines: [])
-        
-        applications = [app]
+    private func reloadData() {
+        applications = repository.getAll()
         tableView.reloadData()
     }
     
