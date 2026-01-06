@@ -8,6 +8,7 @@
 import UIKit
 
 enum ApplicationStatus {
+    case prospect
     case applied
     case interview
     case offer
@@ -18,6 +19,8 @@ extension ApplicationStatus {
 
     var displayTitle: String {
         switch self {
+        case .prospect:
+            return "Hedef"
         case .applied:
             return "Başvuru"
         case .interview:
@@ -31,6 +34,8 @@ extension ApplicationStatus {
 
     var accentColor: UIColor {
         switch self {
+        case .prospect:
+            return .tertiaryLabel
         case .applied:
             return .secondaryLabel
         case .interview:
@@ -44,6 +49,8 @@ extension ApplicationStatus {
 
     var iconName: String {
         switch self {
+        case .prospect:
+            return "circle.dotted"
         case .applied:
             return "paperplane"
         case .interview:

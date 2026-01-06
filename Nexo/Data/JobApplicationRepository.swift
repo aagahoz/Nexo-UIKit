@@ -26,19 +26,69 @@ final class JobApplicationRepository {
     func loadSampleDataIfNeeded() {
         guard applications.isEmpty else { return }
 
-        let app = JobApplication(
-            id: UUID(),
-            companyName: "ABC Teknoloji",
-            positionTitle: "iOS Developer",
-            platform: "LinkedIn",
-            applicationDate: Date(),
-            status: .interview,
-            contacts: [],
-            steps: [],
-            deadlines: []
-        )
+        let companies = [
+            "ABC Teknoloji",
+            "Nova Yazılım",
+            "BlueTech",
+            "InnovaSoft",
+            "NextGen Labs",
+            "Cloudify",
+            "PixelWorks",
+            "CodeNest",
+            "DataFlow",
+            "AppForge"
+        ]
 
-        applications.append(app)
+        let positions = [
+            "iOS Developer",
+            "Junior iOS Developer",
+            "Mobile Software Engineer",
+            "Frontend Developer",
+            "Software Engineer"
+        ]
+
+        let platforms = [
+            "LinkedIn",
+            "Kariyer.net",
+            "Indeed",
+            "Şirket Sitesi"
+        ]
+
+        let statuses: [ApplicationStatus] = [
+            .prospect,
+            .applied,
+            .interview,
+            .offer,
+            .rejected
+        ]
+
+        for _ in 0..<15 {
+            let randomCompany = companies.randomElement()!
+            let randomPosition = positions.randomElement()!
+            let randomPlatform = platforms.randomElement()!
+            let randomStatus = statuses.randomElement()!
+
+            let randomDaysAgo = Int.random(in: 1...60)
+            let randomDate = Calendar.current.date(
+                byAdding: .day,
+                value: -randomDaysAgo,
+                to: Date()
+            ) ?? Date()
+
+            let application = JobApplication(
+                id: UUID(),
+                companyName: randomCompany,
+                positionTitle: randomPosition,
+                platform: randomPlatform,
+                applicationDate: randomDate,
+                status: randomStatus,
+                contacts: [],
+                steps: [],
+                deadlines: []
+            )
+
+            applications.append(application)
+        }
     }
     
 }
