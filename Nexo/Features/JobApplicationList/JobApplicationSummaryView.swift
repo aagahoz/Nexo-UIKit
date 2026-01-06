@@ -40,7 +40,7 @@ final class JobApplicationSummaryView: UIView {
         ])
         
         [prospectedCard, appliedCard, interviewCard, offerCard, rejectedCard].forEach {
-            $0.widthAnchor.constraint(equalToConstant: 75).isActive = true
+            $0.widthAnchor.constraint(equalToConstant: 80).isActive = true
         }
 
         cardsStack.axis = .horizontal

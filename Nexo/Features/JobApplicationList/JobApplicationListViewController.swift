@@ -10,9 +10,11 @@ import UIKit
 final class JobApplicationListViewController: UIViewController {
     
     private let containerStackView = UIStackView()
-    private let tableView = UITableView()
-    private let summaryView = JobApplicationSummaryView()
     
+    private let summaryView = JobApplicationSummaryView()
+    private let actionSummaryBar = ActionSummaryBarView()
+    private let tableView = UITableView()
+
     private let repository = JobApplicationRepository.shared
     private var applications: [JobApplication] = []
     
@@ -41,12 +43,16 @@ final class JobApplicationListViewController: UIViewController {
         containerStackView.axis = .vertical
         containerStackView.spacing = 0
         containerStackView.translatesAutoresizingMaskIntoConstraints = false
-
+        
+        actionSummaryBar.translatesAutoresizingMaskIntoConstraints = false
+        actionSummaryBar.heightAnchor.constraint(equalToConstant: 56).isActive = true
+        
         view.addSubview(containerStackView)
 
         containerStackView.addArrangedSubview(summaryView)
+        containerStackView.addArrangedSubview(actionSummaryBar)
         containerStackView.addArrangedSubview(tableView)
-
+                
         NSLayoutConstraint.activate([
             containerStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             containerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
