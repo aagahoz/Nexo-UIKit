@@ -50,6 +50,8 @@ final class JobApplicationListViewController: UIViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
+        
+        tableView.register(JobApplicationCell.self, forCellReuseIdentifier: JobApplicationCell.reuseIdentifier)
     }
     
     private func reloadData() {
@@ -86,11 +88,13 @@ extension JobApplicationListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
-        let application = applications[indexPath.row]
         
-        cell.textLabel?.text = application.companyName
-        cell.detailTextLabel?.text = application.positionTitle
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: JobApplicationCell.reuseIdentifier, for: indexPath) as? JobApplicationCell else {
+            return UITableViewCell()
+        }
+        
+        let application = applications[indexPath.row]
+        cell.configure(with: application)
         
         return cell
     }
