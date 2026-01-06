@@ -10,6 +10,8 @@ import UIKit
 final class JobApplicationListViewController: UIViewController {
     
     private let tableView = UITableView()
+    private let summaryView = JobApplicationSummaryView()
+    
     private let repository = JobApplicationRepository.shared
     private var applications: [JobApplication] = []
     
@@ -22,6 +24,8 @@ final class JobApplicationListViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped)
         )
+        tableView.tableHeaderView = summaryView
+        summaryView.frame.size.height = 180
         
         setupTableView()
         repository.loadSampleDataIfNeeded()
@@ -51,6 +55,8 @@ final class JobApplicationListViewController: UIViewController {
     private func reloadData() {
         applications = repository.getAll()
         tableView.reloadData()
+        let counts = calculateStatusCounts()
+        summaryView.configure(with: counts)
     }
     
     @objc private func addButtonTapped() {
@@ -58,6 +64,20 @@ final class JobApplicationListViewController: UIViewController {
         navigationController?.pushViewController(addVC, animated: true)
     }
     
+    private func calculateStatusCounts() -> [ApplicationStatus: Int] {
+        var counts: [ApplicationStatus: Int] = [
+            .applied: 0,
+            .interview: 0,
+            .offer: 0,
+            .rejected: 0
+        ]
+        
+        for application in applications {
+            counts[application.status, default: 0] += 1
+        }
+        
+        return counts
+    }
 }
 
 extension JobApplicationListViewController: UITableViewDataSource {
