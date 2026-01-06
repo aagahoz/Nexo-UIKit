@@ -8,13 +8,11 @@
 import UIKit
 
 final class JobApplicationSummaryView: UIView {
-    
-    private let titleLabel = UILabel()
-    
-    private let appliedLabel = UILabel()
-    private let interviewLabel = UILabel()
-    private let offerLabel = UILabel()
-    private let rejectedLabel = UILabel()
+        
+    private let appliedCard = StatusCardView(status: ApplicationStatus.applied)
+    private let interviewCard = StatusCardView(status: ApplicationStatus.interview)
+    private let offerCard = StatusCardView(status: ApplicationStatus.offer)
+    private let rejectedCard = StatusCardView(status: ApplicationStatus.rejected)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,39 +24,34 @@ final class JobApplicationSummaryView: UIView {
     }
     
     private func setupUI() {
-        backgroundColor = .secondarySystemBackground
+        backgroundColor = .systemBackground
         
-        titleLabel.text = "Başvurular Özeti"
-        titleLabel.font = .boldSystemFont(ofSize: 16)
-        
-        let stackView = UIStackView(arrangedSubviews: [
-            titleLabel,
-            appliedLabel,
-            interviewLabel,
-            offerLabel,
-            rejectedLabel
+        let cardsStack = UIStackView(arrangedSubviews: [
+            appliedCard,
+            interviewCard,
+            offerCard,
+            rejectedCard
         ])
         
-        stackView.axis = .vertical
-        stackView.spacing = 8
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        cardsStack.axis = .horizontal
+        cardsStack.spacing = 12
+        cardsStack.distribution = .fillEqually
+        cardsStack.translatesAutoresizingMaskIntoConstraints = false
         
-        addSubview(stackView)
+        addSubview(cardsStack)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
+            cardsStack.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            cardsStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            cardsStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            cardsStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
         ])
     }
     
     func configure(with counts: [ApplicationStatus: Int]) {
-        appliedLabel.text = "Başvuruldu: \(counts[.applied] ?? 0)"
-        interviewLabel.text = "Görüşme: \(counts[.interview] ?? 0)"
-        offerLabel.text = "Teklif: \(counts[.offer] ?? 0)"
-        rejectedLabel.text = "Olumsuz: \(counts[.rejected] ?? 0)"
-        
+        appliedCard.configure(count: counts[.applied] ?? 0)
+        interviewCard.configure(count: counts[.interview] ?? 0)
+        offerCard.configure(count: counts[.offer] ?? 0)
+        rejectedCard.configure(count: counts[.rejected] ?? 0)
     }
-    
 }

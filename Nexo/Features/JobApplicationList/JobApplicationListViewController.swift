@@ -9,6 +9,7 @@ import UIKit
 
 final class JobApplicationListViewController: UIViewController {
     
+    private let containerStackView = UIStackView()
     private let tableView = UITableView()
     private let summaryView = JobApplicationSummaryView()
     
@@ -24,10 +25,9 @@ final class JobApplicationListViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped)
         )
-        tableView.tableHeaderView = summaryView
-        summaryView.frame.size.height = 180
-        
+        setupLayout()
         setupTableView()
+        
         repository.loadSampleDataIfNeeded()
         reloadData()
     }
@@ -37,17 +37,25 @@ final class JobApplicationListViewController: UIViewController {
         reloadData()
     }
     
-    private func setupTableView() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(tableView)
-        
+    private func setupLayout() {
+        containerStackView.axis = .vertical
+        containerStackView.spacing = 0
+        containerStackView.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(containerStackView)
+
+        containerStackView.addArrangedSubview(summaryView)
+        containerStackView.addArrangedSubview(tableView)
+
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            containerStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            containerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            containerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            containerStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
+    }
+    
+    private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
         

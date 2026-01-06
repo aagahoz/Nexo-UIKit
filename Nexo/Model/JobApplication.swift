@@ -5,7 +5,7 @@
 //  Created by Agah Ozdemir on 5.01.2026.
 //
 
-import Foundation
+import UIKit
 
 enum ApplicationStatus {
     case applied
@@ -15,16 +15,43 @@ enum ApplicationStatus {
 }
 
 extension ApplicationStatus {
+
     var displayTitle: String {
         switch self {
         case .applied:
-            return "Başvuruldu"
+            return "Başvuru"
         case .interview:
             return "Görüşme"
         case .offer:
             return "Teklif"
         case .rejected:
             return "Olumsuz"
+        }
+    }
+
+    var accentColor: UIColor {
+        switch self {
+        case .applied:
+            return .secondaryLabel
+        case .interview:
+            return .systemBlue
+        case .offer:
+            return .systemGreen
+        case .rejected:
+            return .systemRed
+        }
+    }
+
+    var iconName: String {
+        switch self {
+        case .applied:
+            return "paperplane"
+        case .interview:
+            return "person.crop.circle.badge.questionmark"
+        case .offer:
+            return "checkmark.seal"
+        case .rejected:
+            return "xmark.seal"
         }
     }
 }

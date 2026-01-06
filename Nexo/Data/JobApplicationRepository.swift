@@ -32,7 +32,7 @@ final class JobApplicationRepository {
             positionTitle: "iOS Developer",
             platform: "LinkedIn",
             applicationDate: Date(),
-            status: .applied,
+            status: .interview,
             contacts: [],
             steps: [],
             deadlines: []
