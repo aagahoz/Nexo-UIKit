@@ -14,6 +14,21 @@ enum ApplicationStatus {
     case rejected
 }
 
+extension ApplicationStatus {
+    var displayTitle: String {
+        switch self {
+        case .applied:
+            return "Başvuruldu"
+        case .interview:
+            return "Görüşme"
+        case .offer:
+            return "Teklif"
+        case .rejected:
+            return "Olumsuz"
+        }
+    }
+}
+
 struct JobApplication {
     let id: UUID
     var companyName: String
