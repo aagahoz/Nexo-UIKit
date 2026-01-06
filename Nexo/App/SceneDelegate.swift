@@ -20,11 +20,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         
-        let navController = UINavigationController(rootViewController: JobApplicationListViewController())
+        let tabBarController = UITabBarController()
         
-        window.rootViewController = navController
+        // 1. Başvurular
+        let applicationsVC = JobApplicationListViewController()
+        let applicationsNav = UINavigationController(rootViewController: applicationsVC)
+        applicationsNav.tabBarItem = UITabBarItem(
+            title: "Başvurular",
+            image: UIImage(systemName: "list.bullet"),
+            selectedImage: UIImage(systemName: "list.bullet")
+        )
+
+        // 2. Settings
+        let settingsVC = SettingsViewController()
+        let settingsNav = UINavigationController(rootViewController: settingsVC)
+        settingsNav.tabBarItem = UITabBarItem(
+            title: "Ayarlar",
+            image: UIImage(systemName: "gearshape"),
+            selectedImage: UIImage(systemName: "gearshape.fill")
+        )
+
+        tabBarController.viewControllers = [
+            applicationsNav,
+            settingsNav
+        ]
+
+        window.rootViewController = tabBarController
         window.makeKeyAndVisible()
-        
         self.window = window
     }
 

@@ -8,58 +8,97 @@
 import UIKit
 
 final class JobApplicationCell: UITableViewCell {
-    
+
     static let reuseIdentifier = "JobApplicationCell"
-    
-    private let companyLabel = UILabel()
+
     private let positionLabel = UILabel()
+    private let companyLabel = UILabel()
+
+    private let statusIconView = UIImageView()
     private let statusLabel = UILabel()
     private let dateLabel = UILabel()
-    
+
+    private let bottomStack = UIStackView()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setupUI() {
-        
-        companyLabel.font = .boldSystemFont(ofSize: 16)
-        positionLabel.font = .systemFont(ofSize: 14)
-        statusLabel.font = .systemFont(ofSize: 13)
-        dateLabel.font = .systemFont(ofSize: 12)
-        
+        selectionStyle = .none
+
+        positionLabel.font = .preferredFont(forTextStyle: .headline)
+        positionLabel.adjustsFontForContentSizeCategory = true
+
+        companyLabel.font = .preferredFont(forTextStyle: .subheadline)
+        companyLabel.textColor = .secondaryLabel
+        companyLabel.adjustsFontForContentSizeCategory = true
+
+        statusLabel.font = .preferredFont(forTextStyle: .caption1)
+        statusLabel.adjustsFontForContentSizeCategory = true
+
+        dateLabel.font = .preferredFont(forTextStyle: .caption1)
         dateLabel.textColor = .secondaryLabel
-        
-        let stackView = UIStackView(arrangedSubviews: [
-            companyLabel,
-            positionLabel,
-            statusLabel,
-            dateLabel
+        dateLabel.adjustsFontForContentSizeCategory = true
+
+        statusIconView.contentMode = .scaleAspectFit
+        statusIconView.tintColor = .label
+        statusIconView.setContentHuggingPriority(.required, for: .horizontal)
+
+        let statusStack = UIStackView(arrangedSubviews: [
+            statusIconView,
+            statusLabel
         ])
-        
-        stackView.axis = .vertical
-        stackView.spacing = 4
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        contentView.addSubview(stackView)
-        
+        statusStack.axis = .horizontal
+        statusStack.spacing = 4
+        statusStack.alignment = .center
+
+        bottomStack.axis = .horizontal
+        bottomStack.spacing = 8
+        bottomStack.alignment = .center
+
+        bottomStack.addArrangedSubview(statusStack)
+        bottomStack.addArrangedSubview(UIView()) // spacer
+        bottomStack.addArrangedSubview(dateLabel)
+
+        let mainStack = UIStackView(arrangedSubviews: [
+            positionLabel,
+            companyLabel,
+            bottomStack
+        ])
+
+        mainStack.axis = .vertical
+        mainStack.spacing = 6
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
+
+        contentView.addSubview(mainStack)
+
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
+            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            mainStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            mainStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
+
+            statusIconView.heightAnchor.constraint(equalToConstant: 12),
+            statusIconView.widthAnchor.constraint(equalToConstant: 12)
         ])
     }
-    
+
     func configure(with application: JobApplication) {
-        companyLabel.text = application.companyName
         positionLabel.text = application.positionTitle
+        companyLabel.text = application.companyName
+
         statusLabel.text = application.status.displayTitle
+        statusLabel.textColor = application.status.accentColor
+
+        statusIconView.image = UIImage(systemName: application.status.iconName)
+        statusIconView.tintColor = application.status.accentColor
+
         dateLabel.text = formattedDate(application.applicationDate)
     }
-    
 }
