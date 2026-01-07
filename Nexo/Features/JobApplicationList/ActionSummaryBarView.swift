@@ -40,6 +40,8 @@ final class ActionSummaryBarView: UIView {
     private func setupUI() {
         backgroundColor = .tertiarySystemBackground
         layer.cornerRadius = 8
+        layer.borderWidth = 0.5
+        layer.borderColor = UIColor.separator.cgColor
 
         let stackView = UIStackView(arrangedSubviews: [
             urgentView,

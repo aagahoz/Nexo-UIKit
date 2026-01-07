@@ -35,6 +35,9 @@ final class ActionCountView: UIView {
 
         titleLabel.font = .preferredFont(forTextStyle: .caption1)
         titleLabel.textColor = .secondaryLabel
+        
+        isUserInteractionEnabled = true
+        accessibilityTraits = .button
 
         let topStack = UIStackView(arrangedSubviews: [
             iconView,

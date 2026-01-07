@@ -23,6 +23,10 @@ final class JobApplicationRepository {
         applications.append(application)
     }
     
+    func delete(_ application: JobApplication) {
+        applications.removeAll { $0.id == application.id }
+    }
+    
     func loadSampleDataIfNeeded() {
         guard applications.isEmpty else { return }
 
@@ -62,7 +66,7 @@ final class JobApplicationRepository {
             .rejected
         ]
 
-        for _ in 0..<15 {
+        for _ in 0..<0 {
             let randomCompany = companies.randomElement()!
             let randomPosition = positions.randomElement()!
             let randomPlatform = platforms.randomElement()!

@@ -80,6 +80,26 @@ final class JobApplicationListViewController: UIViewController {
         navigationController?.pushViewController(addVC, animated: true)
     }
     
+    private func presentDeleteConfirmation(at indexPath: IndexPath) {
+        
+        let application = applications[indexPath.row]
+        
+        let alert = UIAlertController(title: "Başvuruyu Sil", message: "\(application.companyName) başvurusu silinsin mi?", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "İptal", style: .cancel))
+        
+        alert.addAction(UIAlertAction(title: "Sil", style: .destructive) { [weak self] _ in
+            self?.deleteApplication(application)
+        })
+        
+        present(alert, animated: true)
+    }
+    
+    private func deleteApplication(_ application: JobApplication) {
+        repository.delete(application)
+        reloadData()
+    }
+    
     private func calculateStatusCounts() -> [ApplicationStatus: Int] {
         var counts: [ApplicationStatus: Int] = [
             .applied: 0,
@@ -119,5 +139,17 @@ extension JobApplicationListViewController: UITableViewDelegate {
         let selectedApplication = applications[indexPath.row]
         let detailVC = JobApplicationDetailViewController(application: selectedApplication)
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "Sil") { [weak self] _, _, completion in
+                
+            self?.presentDeleteConfirmation(at: indexPath)
+            completion(true)
+            
+        }
+        
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 }
