@@ -70,10 +70,19 @@ final class JobApplicationSummaryView: UIView {
     }
     
     func configure(with counts: [ApplicationStatus: Int]) {
-        prospectedCard.configure(count: counts[.prospect] ?? 0)
-        appliedCard.configure(count: counts[.applied] ?? 0)
-        interviewCard.configure(count: counts[.interview] ?? 0)
-        offerCard.configure(count: counts[.offer] ?? 0)
-        rejectedCard.configure(count: counts[.rejected] ?? 0)
+        configure(card: prospectedCard, count: counts[.prospect] ?? 0)
+        configure(card: appliedCard, count: counts[.applied] ?? 0)
+        configure(card: interviewCard, count: counts[.interview] ?? 0)
+        configure(card: offerCard, count: counts[.offer] ?? 0)
+        configure(card: rejectedCard, count: counts[.rejected] ?? 0)
+    }
+
+    private func configure(card: StatusCardView, count: Int) {
+        if count == 0 {
+            card.isHidden = true
+        } else {
+            card.isHidden = false
+            card.configure(count: count)
+        }
     }
 }

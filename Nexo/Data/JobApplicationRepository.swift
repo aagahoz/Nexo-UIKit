@@ -60,7 +60,7 @@ final class JobApplicationRepository {
 
         let statuses: [ApplicationStatus] = [
             .prospect,
-            .applied,
+//            .applied,
             .interview,
             .offer,
             .rejected
