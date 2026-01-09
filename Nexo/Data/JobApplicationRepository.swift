@@ -66,7 +66,7 @@ final class JobApplicationRepository {
             .rejected
         ]
 
-        for _ in 0..<0 {
+        for _ in 0..<20 {
             let randomCompany = companies.randomElement()!
             let randomPosition = positions.randomElement()!
             let randomPlatform = platforms.randomElement()!

@@ -30,7 +30,7 @@ final class JobApplicationCell: UITableViewCell {
     }
 
     private func setupUI() {
-        selectionStyle = .none
+        selectionStyle = .default
 
         positionLabel.font = .preferredFont(forTextStyle: .headline)
         positionLabel.adjustsFontForContentSizeCategory = true

@@ -14,9 +14,8 @@ final class JobApplicationListViewController: UIViewController {
     private let summaryView = JobApplicationSummaryView()
     private let actionSummaryBar = ActionSummaryBarView()
     private let tableView = UITableView()
-
-    private let repository = JobApplicationRepository.shared
-    private var applications: [JobApplication] = []
+    
+    private let viewModel = JobApplicationListViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,8 +28,6 @@ final class JobApplicationListViewController: UIViewController {
         )
         setupLayout()
         setupTableView()
-        
-        repository.loadSampleDataIfNeeded()
         reloadData()
     }
     
@@ -52,6 +49,9 @@ final class JobApplicationListViewController: UIViewController {
         containerStackView.addArrangedSubview(summaryView)
         containerStackView.addArrangedSubview(actionSummaryBar)
         containerStackView.addArrangedSubview(tableView)
+        
+        containerStackView.setCustomSpacing(12, after: summaryView)
+        containerStackView.setCustomSpacing(12, after: actionSummaryBar)
                 
         NSLayoutConstraint.activate([
             containerStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -69,10 +69,9 @@ final class JobApplicationListViewController: UIViewController {
     }
     
     private func reloadData() {
-        applications = repository.getAll()
+        viewModel.load()
         tableView.reloadData()
-        let counts = calculateStatusCounts()
-        summaryView.configure(with: counts)
+        summaryView.configure(with: viewModel.statusCounts())
     }
     
     @objc private func addButtonTapped() {
@@ -82,43 +81,28 @@ final class JobApplicationListViewController: UIViewController {
     
     private func presentDeleteConfirmation(at indexPath: IndexPath) {
         
-        let application = applications[indexPath.row]
+        let application = viewModel.applications[indexPath.row]
         
         let alert = UIAlertController(title: "Başvuruyu Sil", message: "\(application.companyName) başvurusu silinsin mi?", preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "İptal", style: .cancel))
         
         alert.addAction(UIAlertAction(title: "Sil", style: .destructive) { [weak self] _ in
-            self?.deleteApplication(application)
+            self?.deleteApplication(at: indexPath.row)
         })
         
         present(alert, animated: true)
     }
     
-    private func deleteApplication(_ application: JobApplication) {
-        repository.delete(application)
+    private func deleteApplication(at index: Int) {
+        viewModel.delete(at: index)
         reloadData()
-    }
-    
-    private func calculateStatusCounts() -> [ApplicationStatus: Int] {
-        var counts: [ApplicationStatus: Int] = [
-            .applied: 0,
-            .interview: 0,
-            .offer: 0,
-            .rejected: 0
-        ]
-        
-        for application in applications {
-            counts[application.status, default: 0] += 1
-        }
-        
-        return counts
     }
 }
 
 extension JobApplicationListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        applications.count
+        viewModel.applications.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -127,7 +111,7 @@ extension JobApplicationListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let application = applications[indexPath.row]
+        let application = viewModel.applications[indexPath.row]
         cell.configure(with: application)
         
         return cell
@@ -136,7 +120,7 @@ extension JobApplicationListViewController: UITableViewDataSource {
 
 extension JobApplicationListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedApplication = applications[indexPath.row]
+        let selectedApplication = viewModel.applications[indexPath.row]
         let detailVC = JobApplicationDetailViewController(application: selectedApplication)
         navigationController?.pushViewController(detailVC, animated: true)
     }
